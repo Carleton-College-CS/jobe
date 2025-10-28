@@ -649,6 +649,23 @@ public class Test {
     'expect': { 'outcome': 15, 'stdout': "Un rôle délétère\n"}
 },
 
+# ================= Kotlin tests ==================
+{
+    'comment': 'Correct Java program ',
+    'language_id': 'kotlin',
+    'sourcecode': r'''
+public class Test {
+    fun main() { {
+        println("What a lot of code I need to write.")
+    }
+}
+''',
+    'sourcefilename': 'Test.kt',
+    'parameters': {'cputime':10},
+    'expect': { 'outcome': 15, 'stdout': '''What a lot of code I need to write.
+'''}
+},
+
 #================= C++ tests ======================
 {
     'comment': 'Test good C++ hello world',
