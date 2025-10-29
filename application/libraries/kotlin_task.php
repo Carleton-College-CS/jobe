@@ -61,7 +61,7 @@ class Kotlin_Task extends Task {
 
         $prog = file_get_contents($this->sourceFileName);
         $compileArgs = $this->getParam('compileargs');
-        $cmd = '/usr/bin/kotlinc ' . $extra_javacflags . ' ' . implode(' ', $compileArgs) . " {$this->sourceFileName}";
+        $cmd = '/root/.sdkman/candidates/kotlin/current/bin/kotlinc ' . $extra_javacflags . ' ' . implode(' ', $compileArgs) . " {$this->sourceFileName}";
         list($output, $this->cmpinfo) = $this->run_in_sandbox($cmd);
         if (empty($this->cmpinfo)) {
             $this->executableFileName = $this->sourceFileName;
