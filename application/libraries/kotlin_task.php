@@ -46,7 +46,7 @@ class Kotlin_Task extends Task {
         // Superclass calls subclasses to get filename if it's
         // not provided, so $this->sourceFileName should now be set correctly.
         $extStart = strpos($this->sourceFileName, '.');  // Start of extension
-        $this->mainClassName = substr($this->sourceFileName, 0, $extStart);
+        $this->mainClassName = substr($this->sourceFileName, 0, $extStart) . "Kt";
     }
 
     public static function getVersionCommand() {
@@ -81,7 +81,7 @@ class Kotlin_Task extends Task {
     }
 
     public function getExecutablePath() {
-        return '/usr/bin/java';
+        return '/root/.sdkman/candidates/kotlin/current/bin/kotlin';
     }
 
 
