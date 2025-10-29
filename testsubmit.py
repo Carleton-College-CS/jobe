@@ -651,13 +651,11 @@ public class Test {
 
 # ================= Kotlin tests ==================
 {
-    'comment': 'Correct Java program ',
+    'comment': 'Correct Kotlin program ',
     'language_id': 'kotlin',
     'sourcecode': r'''
-public class Test {
-    fun main() { {
-        println("What a lot of code I need to write.")
-    }
+fun main()  {
+    println("What a lot of code I need to write.")
 }
 ''',
     'sourcefilename': 'Test.kt',
