@@ -705,7 +705,7 @@ fun main()  {
     'language_id': 'kotlin',
     'sourcecode': r"""
 // A Kotlin program with a support class
-fun main {
+fun main() {
     val thing = Thing("Farewell cruel world")
     thing.printme()
 }

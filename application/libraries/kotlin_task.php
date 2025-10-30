@@ -14,6 +14,7 @@ require_once('application/libraries/LanguageTask.php');
 
 class Kotlin_Task extends Task {
     public string $mainClassName;
+    public string $additionalFiles;
     
     public function __construct($filename, $input, $params) {
         global $CI;
@@ -49,6 +50,18 @@ class Kotlin_Task extends Task {
         $this->mainClassName = substr($this->sourceFileName, 0, $extStart) . "Kt";
     }
 
+    public function load_files($fileList) {
+        parent::load_files($fileList);
+
+        // Store each additional file so we can add
+        $this->additionalFiles = "";
+        foreach ($fileList as $file) {
+            // $fileId is $file[0], but we don't need it
+            $filename = $file[1];
+            $this->additionalFiles = $this->additionalFiles . $filename . " ";
+        }
+    }
+
     public static function getVersionCommand() {
         return array('kotlin -version', '/version "?([0-9._]*)/');
     }
@@ -61,23 +74,18 @@ class Kotlin_Task extends Task {
 
         $prog = file_get_contents($this->sourceFileName);
         $compileArgs = $this->getParam('compileargs');
-        $cmd = '/opt/kotlinc/bin/kotlinc ' . $extra_javacflags . ' ' . implode(' ', $compileArgs) . " {$this->sourceFileName}";
+        $cmd = '/opt/kotlinc/bin/kotlinc ' . $extra_javacflags . ' ' . implode(' ', $compileArgs) 
+            . " {$this->sourceFileName}" . " {$this->additionalFiles}";
         list($output, $this->cmpinfo) = $this->run_in_sandbox($cmd);
         if (empty($this->cmpinfo)) {
             $this->executableFileName = $this->sourceFileName;
         }
     }
 
-    // A default name for Java programs. [Called only if API-call does
-    // not provide a filename. As a side effect, also set the mainClassName.
+    // A default name for Kotlin programs. An unsual name is given to avoid
+    // collisions with other names that might be used
     public function defaultFileName($sourcecode) {
-        $main = $this->getMainClass($sourcecode);
-        if ($main === FALSE) {
-            $this->cmpinfo .= "WARNING: can't determine main class, so source file has been named 'prog.java', which probably won't compile.";
-            return 'prog.java'; // This will probably fail
-        } else {
-            return $main.'.java';
-        }
+        return 'RsDefaultMain.kt';
     }
 
     public function getExecutablePath() {
@@ -88,22 +96,6 @@ class Kotlin_Task extends Task {
 
     public function getTargetFile() {
         return $this->getParam('main_class') ?? $this->mainClassName;
-    }
-
-
-    // Return the name of the main class in the given prog, or FALSE if no
-    // such class found. Uses a regular expression to find a public class with
-    // a public static void main method.
-    // Not totally safe as it doesn't parse the file, e.g. would be fooled
-    // by a commented-out main class with a different name.
-    private function getMainClass($prog) {
-        $pattern = '/(^|\W)public\s+class\s+(\w+)[^{]*\{.*?(public\s+static|static\s+public)\s+void\s+main\s*\(\s*String/ms';
-        if (preg_match_all($pattern, $prog, $matches) !== 1) {
-            return FALSE;
-        }
-        else {
-            return $matches[2][0];
-        }
     }
 
     // Get rid of the tab characters at the start of indented lines in
