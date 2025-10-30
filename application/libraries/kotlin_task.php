@@ -63,7 +63,7 @@ class Kotlin_Task extends Task {
     }
 
     public static function getVersionCommand() {
-        return array('kotlin -version', '/version "?([0-9._]*)/');
+        return array('/opt/kotlinc/bin/kotlin -version', '/version "?([0-9._]*)/');
     }
 
     public function compile() {
